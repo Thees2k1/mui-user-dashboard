@@ -24,6 +24,7 @@ export interface Customer {
   avatar: string;
   name: string;
   email: string;
+  gender: String;
   address: { city: string; state: string; country: string; street: string };
   phone: string;
   createdAt: Date;
@@ -35,6 +36,8 @@ interface CustomersTableProps {
   rows?: Customer[];
   rowsPerPage?: number;
 }
+
+
 
 export function CustomersTable({
   count = 0,
@@ -53,7 +56,6 @@ export function CustomersTable({
   const selectedSome =
     (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const seelctedAll = rows.length > 0 && selected?.size === rows.length;
-
   return (
     <Card>
       <Box sx={{ overflowX: "auto" }}>
@@ -77,12 +79,23 @@ export function CustomersTable({
               <TableCell>Email</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Phone</TableCell>
+              <TableCell>Gender</TableCell>
               <TableCell>Signed Up</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => {
+            
+            {
+              count===0 ?
+              <TableRow>
+                <TableCell align="center" colSpan={7}>
+                  <Typography variant="subtitle2">No record fount</Typography>
+                </TableCell>
+              </TableRow>
+              :
+            rows.map((row) => {
               const isSelected = selected?.has(row.id);
+              
               return (
                 <TableRow hover key={row.id} selected={isSelected}>
                   <TableCell padding="checkbox">
@@ -109,6 +122,9 @@ export function CustomersTable({
                     {row.phone}
                   </TableCell>
                   <TableCell>
+                    {row.gender}
+                  </TableCell>
+                  <TableCell>
                     {dayjs(row.createdAt).format('MMM D, YYYY')}
                   </TableCell>
                 </TableRow>
@@ -118,7 +134,8 @@ export function CustomersTable({
         </Table>
       </Box>
       <Divider />
-      <TablePagination
+      {
+        count !==0?<TablePagination
         component="div"
         count={count}
         onPageChange={noop}
@@ -126,7 +143,9 @@ export function CustomersTable({
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 15]}
-      />
+      />:null
+      }
+      
     </Card>
   );
 }
