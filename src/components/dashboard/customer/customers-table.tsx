@@ -56,6 +56,8 @@ export function CustomersTable({
   const selectedSome =
     (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
   const seelctedAll = rows.length > 0 && selected?.size === rows.length;
+
+  console.log(rows)
   return (
     <Card>
       <Box sx={{ overflowX: "auto" }}>

@@ -16,9 +16,6 @@ const CustomerBoard: React.FC<CustomerBoardProps> = ({
   const page = 0;
   const rowsPerPage = 5;
 
-  //list of paged customers
-  const paginatedCustomers = applyPagination(customers, page, rowsPerPage);
-
   const [filterText, setFilterText] = useState<string>("");
   const [filterGender,setFilterGender] = useState<ToggleOption>(ToggleOption.all)
   const [filteredCustomer, setFilteredCustomer] = useState<Customer[]>([]);
@@ -29,22 +26,27 @@ const CustomerBoard: React.FC<CustomerBoardProps> = ({
   const handleChangeGenderFilter = (newValue: ToggleOption) => {
     setFilterGender(newValue);
   };
-  useEffect(() => {
+
+  const handleReturnFilter=()=>{
+    
     var newFilter : Customer[] =[];
     if(filterGender === ToggleOption.all){
       newFilter = customers
     }else{
-    
+      console.log(`filter: ${filterGender}`)
       newFilter = customers.filter((cus:Customer)=>cus.gender === filterGender.toString())
     }
 
     if(filterText !==""){
-       newFilter = customers.filter((cus: Customer) =>
+       newFilter = newFilter.filter((cus: Customer) =>
         cus.name.includes(filterText))
     }
     
      
     setFilteredCustomer(applyPagination(newFilter,page,rowsPerPage));
+  }
+  useEffect(() => {
+    handleReturnFilter();
    
   }, [filterText,filterGender]);
 
@@ -59,25 +61,17 @@ const CustomerBoard: React.FC<CustomerBoardProps> = ({
         onFilterChange={handleFilterChange}
       />
       {/* Table */}
-      {filterText !== "" || filterGender !== ToggleOption.all ? (
-        filteredCustomer.length !== 0 ? (
+      {
+        
+        (
           <CustomersTable
             count={filteredCustomer.length}
             page={page}
             rows={filteredCustomer}
             rowsPerPage={rowsPerPage}
           />
-        ) : (
-         <CustomersTable/>
-        )
-      ) : (
-        <CustomersTable
-          count={paginatedCustomers.length}
-          page={page}
-          rows={paginatedCustomers}
-          rowsPerPage={rowsPerPage}
-        />
-      )}
+        ) 
+      }
     </>
   );
 };
