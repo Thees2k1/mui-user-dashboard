@@ -31,6 +31,8 @@ export function AuthGuard({children}: AuthGuardProps): React.JSX.Element | null{
             return;
         }
 
+        console.log('authorized')
+
         setIsChecking(false);
     }
 

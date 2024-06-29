@@ -17,12 +17,12 @@ import React from "react";
 
 interface GenderToggleProps {
     genderValue: string;
-    onChangeValue: (newValue: ToggleOption) => void;
+    onChangeValue: (newValue: string) => void;
   }
 
 const GenderToggle: React.FC<GenderToggleProps>= ({genderValue,onChangeValue}) => {
   const handleChange = (event: React.MouseEvent<HTMLElement, MouseEvent>, value : ToggleOption) => {
-    onChangeValue(value)
+    onChangeValue(value.toString());
   };
   return (
     <Card >

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import CustomersFilters from "./customers-filters";
+import React, { useState } from "react";
+
 import { Customer, CustomersTable } from "./customers-table";
-import  { ToggleOption } from "./customers-location-toggle";
-import GenderToggle from "./customers-location-toggle";
+import CustomerFilter, { Filter } from "./filter/customer-filter";
 
 interface CustomerBoardProps {
   customers: Customer[];
@@ -15,62 +14,37 @@ const CustomerBoard: React.FC<CustomerBoardProps> = ({
 }: CustomerBoardProps) => {
   const page = 0;
   const rowsPerPage = 5;
-
-  const [filterText, setFilterText] = useState<string>("");
-  const [filterGender,setFilterGender] = useState<ToggleOption>(ToggleOption.all)
   const [filteredCustomer, setFilteredCustomer] = useState<Customer[]>([]);
 
-  const handleFilterChange = (newValue: string) => {
-    setFilterText(newValue);
-  };
-  const handleChangeGenderFilter = (newValue: ToggleOption) => {
-    setFilterGender(newValue);
-  };
-
-  const handleReturnFilter=()=>{
-    
-    var newFilter : Customer[] =[];
-    if(filterGender === ToggleOption.all){
-      newFilter = customers
-    }else{
-      console.log(`filter: ${filterGender}`)
-      newFilter = customers.filter((cus:Customer)=>cus.gender === filterGender.toString())
+  const handleFilter = (filter : Filter) => {
+    var newFilter =customers;
+   if(filter.gender && filter.gender !== "all") {
+      newFilter = customers.filter(
+        (cus: Customer) => cus.gender === filter.gender!
+      );
     }
 
-    if(filterText !==""){
-       newFilter = newFilter.filter((cus: Customer) =>
-        cus.name.includes(filterText))
+    if (filter.text && filter.text !=="") {
+      newFilter = newFilter.filter((cus: Customer) =>
+        cus.name.includes(filter.text!)
+      );
     }
-    
-     
-    setFilteredCustomer(applyPagination(newFilter,page,rowsPerPage));
-  }
-  useEffect(() => {
-    handleReturnFilter();
-   
-  }, [filterText,filterGender]);
 
-
+    setFilteredCustomer(applyPagination(newFilter, page, rowsPerPage));
+  };
 
   return (
     <>
       {/* search bar */}
-      <GenderToggle genderValue={filterGender} onChangeValue={handleChangeGenderFilter}/>
-      <CustomersFilters
-        filterValue={filterText}
-        onFilterChange={handleFilterChange}
-      />
+    <CustomerFilter onFilterApply={handleFilter}/>
       {/* Table */}
       {
-        
-        (
-          <CustomersTable
-            count={filteredCustomer.length}
-            page={page}
-            rows={filteredCustomer}
-            rowsPerPage={rowsPerPage}
-          />
-        ) 
+        <CustomersTable
+          count={filteredCustomer.length}
+          page={page}
+          rows={filteredCustomer}
+          rowsPerPage={rowsPerPage}
+        />
       }
     </>
   );

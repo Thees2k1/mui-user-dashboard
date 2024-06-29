@@ -9,20 +9,18 @@ import Card from '@mui/material/Card';
 import { useState } from 'react';
 
 
-interface CustomersFilterProps {
-    filterValue: string;
+interface SearchInputProps {
     onFilterChange: (newValue: string) => void;
   }
 
 
-  const CustomersFilter: React.FC<CustomersFilterProps> = ({filterValue, onFilterChange }) => {
+  const SearchInput: React.FC<SearchInputProps> = ( {onFilterChange }) => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onFilterChange(event.target.value);
       };
     return(
         <Card sx={{p:2}}>
             <OutlinedInput
-                value={filterValue}
                 onChange={handleInputChange}
                 defaultValue=""
                 fullWidth
@@ -38,4 +36,4 @@ interface CustomersFilterProps {
     )
 }
 
-export default CustomersFilter;
+export default SearchInput;
